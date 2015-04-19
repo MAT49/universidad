@@ -1,0 +1,46 @@
+<p>
+<h1> Super Integer Sorter </h1>
+  <h2> Sort + and - integers the easy way! </h2> <br />
+  Use go back button to add as many numbers as you desire.
+  <br />
+  
+</p>
+<!-- Display the results of the request in a table -->
+    <table border = "border">
+      <tr>
+        <th> Positive Numbers </th>
+      </tr>
+
+      <% @selected_posNums.each do |item| %>
+        <tr>
+          <td> <%= item.num %> </td>
+        </tr>
+      <% end %> <!-- end of do loop -->
+    </table>
+	<br />
+	<br />
+	
+	<!-- Display the results of the request in a table -->
+    <table border = "border">
+      <tr>
+        <th> Negative Numbers </th>
+      </tr>
+
+      <% @selected_negNums.each do |item| %>
+        <tr>
+          <td> <%= item.num %> </td>
+        </tr>
+      <% end %> <!-- end of do loop -->
+    </table>
+	
+  <br />
+  <br /> 
+ 
+<button onclick="goBack()">Go Back</button>
+
+	<script>
+		function goBack() 
+	{
+		window.history.back();
+	}
+	</script>
