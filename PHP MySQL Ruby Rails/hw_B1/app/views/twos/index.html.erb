@@ -1,0 +1,27 @@
+<h1>Listing twos</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>First</th>
+      <th>Second</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @twos.each do |two| %>
+      <tr>
+        <td><%= two.first %></td>
+        <td><%= two.second %></td>
+        <td><%= link_to 'Show', two %></td>
+        <td><%= link_to 'Edit', edit_two_path(two) %></td>
+        <td><%= link_to 'Destroy', two, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Two', new_two_path %>

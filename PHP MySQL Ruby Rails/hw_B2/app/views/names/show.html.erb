@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name1:</strong>
+  <%= @name.name1 %>
+</p>
+
+<p>
+  <strong>Name2:</strong>
+  <%= @name.name2 %>
+</p>
+
+<p>
+  <strong>Name3:</strong>
+  <%= @name.name3 %>
+</p>
+
+<%= link_to 'Edit', edit_name_path(@name) %> |
+<%= link_to 'Back', names_path %>
