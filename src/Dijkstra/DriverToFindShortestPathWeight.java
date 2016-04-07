@@ -6,7 +6,6 @@
 package Dijkstra;
 import java.io.*;
 import java.util.Scanner;
-import java.util.ArrayList;
 
 // Visibility: package-wide only
 // Driver program takes in a txt file
@@ -57,7 +56,7 @@ class DriverToFindShortestPathWeight {
         // ends timer
         endTimer = System.currentTimeMillis();
             
-        System.out.println("Sum of shortest paths are " + total);
+        System.out.println("Sum of shortest paths is " + total);
         System.out.println("Elapsed time: " + (endTimer - beginTimer)/1000 + " seconds");       
         
     }  
@@ -148,11 +147,11 @@ class DriverToFindShortestPathWeight {
                             //System.out.println(dest + " " + weight);
                             
                             // add next node and cost to Node object using array method                             
-                            list[originNode].addNode(destinationNode, cost);
+                            list[originNode].addNeighbor(destinationNode, cost);
                             
                             // add the same information to the destination node
                             // because it is an undirected graph 
-                            list[destinationNode].addNode(originNode, cost);
+                            list[destinationNode].addNeighbor(originNode, cost);
 
                             break;
                         default:
