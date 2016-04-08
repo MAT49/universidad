@@ -57,7 +57,8 @@ class DriverToFindShortestPathWeight {
         endTimer = System.currentTimeMillis();
             
         System.out.println("Sum of shortest paths is " + total);
-        System.out.println("Elapsed time: " + (endTimer - beginTimer)/1000 + " seconds");       
+        System.out.println("Start time: " + beginTimer + "\tEnd time: " + endTimer);
+        System.out.println("Elapsed time: " + (endTimer - beginTimer) + " milliseconds");       
         
     }  
     

@@ -50,67 +50,95 @@ class Dijkstra {
         // assign cost of 0 to first node, and current node position to 0
         priorityQueue.get(0).nodeWeight = 0;   
 
-        //while (priorityQueue.isEmpty() == false)
-        //{
-        
-            // Step 3. calculate current node's distances to immediate neighbors
-            // this loop iterates through ArrayList costs for the current node
-            // queue.pQ.get(currPos) retrives the current node
-            for (int i=0; i<priorityQueue.peek().neighbors.size(); i++)
-            {   
-                
-                nodeToBeUpdated = priorityQueue.peek().neighbors.get(i).neighbor;  
-                
-                // Step 5a. only continue if neighboring node is in the unvisited queue
-                // else, skip
-                if (priorityQueue.size() >= hashMap[nodeToBeUpdated] && hashMap[nodeToBeUpdated] == priorityQueue.get(hashMap[nodeToBeUpdated]).nodeNum)
-                {
-                    Node selectedNode = priorityQueue.get(hashMap[nodeToBeUpdated]);
-                    // var neighbor points to its position in LinkedList
-                    // to shorten future invocation of this var
-                    int currentWeight = priorityQueue.peek().nodeWeight;
-                    int updatedWeight = currentWeight + priorityQueue.peek().neighbors.get(i).weight;
-                    
-                    // add current minDist and dist to neighboring node
-                    // to shorten future invocation of this var               
-
-                    if (selectedNode.nodeWeight > updatedWeight)
-                    {
-                        selectedNode.nodeWeight = updatedWeight;      
-                        bubbleUp(priorityQueue.indexOf(selectedNode));
-                    }       
-                    System.out.println(priorityQueue.indexOf(selectedNode) + " " + selectedNode.nodeNum + " " + selectedNode.nodeWeight);                    
+        while (priorityQueue.isEmpty() == false)
+        {
+            if (priorityQueue.peek().neighbors.isEmpty())
+            {
+                Collections.swap(priorityQueue, 0, priorityQueue.size()-1);  
+                hashMap[priorityQueue.peek().nodeNum] = 0;  
+                hashMap[priorityQueue.getLast().nodeNum] = -1;
+                if (priorityQueue.getLast().nodeWeight < Integer.MAX_VALUE)
+                { 
+                    sum += priorityQueue.getLast().nodeWeight;
                 }
-
+                System.out.println("current sum is " + sum);
+                priorityQueue.removeLast();            
+                bubbleDown(0);
             }
+            if (priorityQueue.peek().nodeWeight < Integer.MAX_VALUE)
+            {
+                //System.out.println("current MAX weight is " + priorityQueue.peek().nodeWeight);
+                // Step 3. calculate current node's distances to immediate neighbors
+                // this loop iterates through ArrayList costs for the current node
+                // queue.pQ.get(currPos) retrives the current node
+                for (int i=0; i<priorityQueue.peek().neighbors.size(); i++)
+                {                                
+                    nodeToBeUpdated = priorityQueue.peek().neighbors.get(i).neighbor; 
 
+                    // Step 5a. only continue if neighboring node is in the unvisited queue
+                    // else, skip
+                    //priorityQueue.size() >= hashMap[nodeToBeUpdated] 
+                    if (hashMap[nodeToBeUpdated] != -1 && nodeToBeUpdated < priorityQueue.size() )
+                    {
+                        Node selectedNode = priorityQueue.get(hashMap[nodeToBeUpdated]);
+                        // var neighbor points to its position in LinkedList
+                        // to shorten future invocation of this var
+                        int currentWeight = priorityQueue.peek().nodeWeight;
+                        int updatedWeight = currentWeight + priorityQueue.peek().neighbors.get(i).weight;
+
+                        // add current minDist and dist to neighboring node
+                        // to shorten future invocation of this var               
+
+                        if (selectedNode.nodeWeight > updatedWeight)
+                        {
+                            selectedNode.nodeWeight = updatedWeight;      
+                            bubbleUp(priorityQueue.indexOf(selectedNode));
+                            //System.out.println(priorityQueue.indexOf(selectedNode) + " " + selectedNode.nodeNum + " " + selectedNode.nodeWeight);      
+                        }       
+
+                    }
+
+                }                
+
+            } 
+            
             // Step 4. after cost to all direct neighbors are calculated, dequeue current node
-            Collections.swap(priorityQueue, 0, priorityQueue.size()-1);  
-            hashMap[priorityQueue.peek().nodeNum] = 0;
-            sum += priorityQueue.getLast().nodeWeight;
-            //System.out.println("sum is " + sum);
-            priorityQueue.remove(priorityQueue.size()-1);
-            bubbleDown(0);
+                       
+                Collections.swap(priorityQueue, 0, priorityQueue.size()-1);  
+                hashMap[priorityQueue.peek().nodeNum] = 0;  
+                hashMap[priorityQueue.getLast().nodeNum] = -1;
+                if (priorityQueue.getLast().nodeWeight < Integer.MAX_VALUE)
+                { 
+                    sum += priorityQueue.getLast().nodeWeight;
+                }
+                System.out.println("current sum is " + sum);
+                priorityQueue.removeLast();            
+                bubbleDown(0);          
+            
+            
+            
+
+            
+    //System.out.println("\n\n\n");
+    //for (int j=0; j<100; j++)
+    //System.out.println(j + " " + priorityQueue.get(j).nodeNum + " " + priorityQueue.get(j).nodeWeight);
+            
+            
+
+           
             
 
             
             // Step 5b. if highest priority node has distance value of positive infinity-like value
             // then stop
 
-            
+    
             // Step 6. select unvisited node with smallest tentative distance (minDist)
             // class tree methods ensure we will always remove the end of the priority queue
             // which means currPos = 0 until queue is empty
                 
+        }
 
-                        
-                
-        
-        //}
-            System.out.println("\n\n\n");
-        for (int j=0; j<priorityQueue.size()-1; j++)
-            System.out.println(j + " " + priorityQueue.get(j).nodeNum + " " + priorityQueue.get(j).nodeWeight);
-            
         return sum;   
         
     }
@@ -121,51 +149,74 @@ class Dijkstra {
     // and returns nothing
     private static void bubbleUp(int pos)
     {
+
         // if parent has less priority (i.e. higher priority number)
         // then swap, and call recursive upheap method
-        if (priorityQueue.get(pos/2).nodeWeight > priorityQueue.get(pos).nodeWeight)
+        if (priorityQueue.get((pos-1)/2).nodeWeight > priorityQueue.get(pos).nodeWeight)
         {
-            int arrayLoc = priorityQueue.get(pos/2).nodeNum;
-            Collections.swap(priorityQueue, pos, pos/2);
-            hashMap[nodeToBeUpdated] = pos/2;
+            int arrayLoc = priorityQueue.get((pos-1)/2).nodeNum;
+            Collections.swap(priorityQueue, pos, (pos-1)/2);
+            hashMap[nodeToBeUpdated] = (pos-1)/2;
             hashMap[arrayLoc] = pos;
-            bubbleUp(pos/2);
-            
+            bubbleUp((pos-1)/2);
+
         }
     }
+
     
     
     // helper class method organizes binary tree according to priority
     // takes an int (node position)
     // and returns nothing
     private static void bubbleDown(int pos)
-    {        
-        // 3 possible cases
+    {   
+        if (pos*2+2 < priorityQueue.size() ) {
+      
+        // 5 possible cases
         // if node is greater than left child, and LC <= RC, node and LC are swapped
-        
+
         if (priorityQueue.get(pos).nodeWeight > priorityQueue.get(pos*2+1).nodeWeight)
         {
-            // if node is greater than left child, and LC > RC, node and RC are swapped
-            if (priorityQueue.get(pos).nodeWeight > priorityQueue.get(pos*2+2).nodeWeight && priorityQueue.get(pos*2+1).nodeWeight < priorityQueue.get(pos*2+2).nodeWeight)
+            if (priorityQueue.get(pos).nodeWeight < priorityQueue.get(pos*2+2).nodeWeight && pos*2+2 < priorityQueue.size() )
             {
-                int arrayLoc = priorityQueue.get(pos/2+1).nodeNum;
+                int arrayLoc = priorityQueue.get(pos*2+1).nodeNum;
                 Collections.swap(priorityQueue, pos, pos*2+1);
-                hashMap[nodeToBeUpdated] = pos/2+1;
+                hashMap[nodeToBeUpdated] = pos*2+1;
                 hashMap[arrayLoc] = pos;
-            } else
+                // calls helper class method downheap to reorganize priority queue
+                bubbleDown(pos*2+1);
+            } else if (priorityQueue.get(pos).nodeWeight > priorityQueue.get(pos*2+2).nodeWeight)
             {
-                int arrayLoc = priorityQueue.get(pos/2+1).nodeNum;
-                Collections.swap(priorityQueue, pos, pos*2+2);
-                hashMap[nodeToBeUpdated] = pos/2+1;
-                hashMap[arrayLoc] = pos;
+                if (priorityQueue.get(pos*2+1).nodeWeight <= priorityQueue.get(pos*2+2).nodeWeight)
+                {
+                    int arrayLoc = priorityQueue.get(pos*2+1).nodeNum;
+                    Collections.swap(priorityQueue, pos, pos*2+1);
+                    hashMap[nodeToBeUpdated] = pos*2+1;
+                    hashMap[arrayLoc] = pos;
+                    // calls helper class method downheap to reorganize priority queue
+                    bubbleDown(pos*2+1);
+                } else 
+                {
+                    int arrayLoc = priorityQueue.get(pos*2+2).nodeNum;
+                    Collections.swap(priorityQueue, pos, pos*2+2);
+                    hashMap[nodeToBeUpdated] = pos*2+2;
+                    hashMap[arrayLoc] = pos;
+                    // calls helper class method downheap to reorganize priority queue
+                    bubbleDown(pos*2+2);
+                }
             }
-
+        } else if (priorityQueue.get(pos).nodeWeight < priorityQueue.get(pos*2+1).nodeWeight && priorityQueue.get(pos).nodeWeight > priorityQueue.get(pos*2+2).nodeWeight && pos*2+2 < priorityQueue.size())
+        {            
+            int arrayLoc = priorityQueue.get(pos*2+2).nodeNum;
+            Collections.swap(priorityQueue, pos, pos*2+2);
+            hashMap[nodeToBeUpdated] = pos*2+2;
+            hashMap[arrayLoc] = pos;
             // calls helper class method downheap to reorganize priority queue
-            bubbleDown(pos);
-  
-        // lastly, nothing happens because the node is already has highest (i.e. smallest number) priority
-       
-        }
-    }
+            bubbleDown(pos*2+2);          
+        } else {      }
+        
+        } }
+ 
+    
     
 }
