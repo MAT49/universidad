@@ -43,7 +43,7 @@ class Dijkstra {
         for (int i=0; i< passedList.length; i++)
         {     
             priorityQueue.add(i, passedList[i]);
-            hashMap[i] = i;
+            hashMap[i] = priorityQueue.get(i).nodeNum;
         }        
 
         
@@ -60,19 +60,20 @@ class Dijkstra {
                 // Step 3. calculate current node's distances to immediate neighbors
                 // this loop iterates through ArrayList costs for the current node
                 // queue.pQ.get(currPos) retrives the current node
+                System.out.println("size of neighbors is " + priorityQueue.peek().neighbors.size());
                 for (int i=0; i<priorityQueue.peek().neighbors.size(); i++)
                 {                                
                     nodeToBeUpdated = priorityQueue.peek().neighbors.get(i).neighbor; 
-
+                    
                     // Step 5a. only continue if neighboring node is in the unvisited queue
                     // else, skip
-                    //priorityQueue.size() >= hashMap[nodeToBeUpdated] 
+                    //System.out.println("top node is " + priorityQueue.peek().nodeNum + ", node0 is " + priorityQueue.get(0).nodeNum + " and position is " + priorityQueue.indexOf(priorityQueue.peek())  );
 
                     if (hashMap[nodeToBeUpdated] != -1 && hashMap[nodeToBeUpdated] < priorityQueue.size() )
                     {                        
-                                            
-                    System.out.println("hashMap index " + priorityQueue.peek().neighbors.get(i).neighbor + " hashMap value " + hashMap[i] + 
-                            "; Node number " + priorityQueue.get(hashMap[i]).nodeNum +  " ; Node weight " + priorityQueue.get(hashMap[i]).nodeWeight);
+                    System.out.println(hashMap[0] + " " + hashMap[1] + " " + hashMap[2] + " " + hashMap[3] + " " + hashMap[4] );                        
+                    System.out.println("i=" + i + "; hashMap[" + priorityQueue.peek().neighbors.get(i).neighbor + "]=" + hashMap[priorityQueue.peek().neighbors.get(i).neighbor]);
+                    //System.out.println("Node queue num " + priorityQueue.indexOf(priorityQueue.get(priorityQueue.peek().neighbors.get(i).neighbor)) + "; Node number " + priorityQueue.get(priorityQueue.peek().neighbors.get(i).neighbor).nodeNum);
                    
                         
                         
@@ -99,7 +100,8 @@ class Dijkstra {
             
             // Step 4. after cost to all direct neighbors are calculated, dequeue current node
                        
-                Collections.swap(priorityQueue, 0, priorityQueue.size()-1);  
+                Collections.swap(priorityQueue, 0, priorityQueue.size()-1);                 
+                //System.out.println("now top is " + priorityQueue.peek().nodeNum);
                 hashMap[priorityQueue.peek().nodeNum] = 0;  
                 hashMap[priorityQueue.getLast().nodeNum] = -1;
                 if (priorityQueue.getLast().nodeWeight < Integer.MAX_VALUE && priorityQueue.getLast().neighbors.isEmpty() == false)
@@ -110,8 +112,12 @@ class Dijkstra {
                 //System.out.println("current sum is " + sum);
                 priorityQueue.removeLast();
                
-                bubbleDown(0);          
-                        
+                bubbleDown(0);         
+                if (!priorityQueue.isEmpty()) {
+                    System.out.println("the new top is " + priorityQueue.peek().nodeNum + " and its value is " + hashMap[priorityQueue.peek().nodeNum]);
+                }
+                //for (int i=0; i<priorityQueue.size(); i++)
+                    //System.out.print(priorityQueue.get(i).nodeNum + " ");
             
                
                 System.out.println("--------------------------------------");
