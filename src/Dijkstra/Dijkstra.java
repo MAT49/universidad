@@ -51,18 +51,7 @@ class Dijkstra {
         priorityQueue.get(0).nodeWeight = 0;   
 
         while (priorityQueue.isEmpty() == false)
-        {
-            
-             System.out.println("\n\n\n");
-                for (int j=0; j<priorityQueue.size(); j++) {
-                    System.out.println(j + " " + priorityQueue.get(j).nodeNum + " " + priorityQueue.get(j).nodeWeight);
-                    //for (int k =0; k<priorityQueue.get(j).neighbors.size(); k++) {
-                        //System.out.println(j + " " + priorityQueue.get(j).neighbors.get(k).neighbor + " " + priorityQueue.get(j).neighbors.get(k).weight);
-                    //}
-                }
-                
-                
-            
+        {                        
             // Step 5b. if highest priority node has distance value of positive infinity-like value
             // then stop
             if (priorityQueue.peek().nodeWeight < Integer.MAX_VALUE)
@@ -78,9 +67,15 @@ class Dijkstra {
                     // Step 5a. only continue if neighboring node is in the unvisited queue
                     // else, skip
                     //priorityQueue.size() >= hashMap[nodeToBeUpdated] 
-                   
+
                     if (hashMap[nodeToBeUpdated] != -1 && hashMap[nodeToBeUpdated] < priorityQueue.size() )
                     {                        
+                                            
+                    System.out.println("hashMap index " + priorityQueue.peek().neighbors.get(i).neighbor + " hashMap value " + hashMap[i] + 
+                            "; Node number " + priorityQueue.get(hashMap[i]).nodeNum +  " ; Node weight " + priorityQueue.get(hashMap[i]).nodeWeight);
+                   
+                        
+                        
                         Node selectedNode = priorityQueue.get(hashMap[nodeToBeUpdated]);
                         // var neighbor points to its position in LinkedList
                         // to shorten future invocation of this var
@@ -90,15 +85,13 @@ class Dijkstra {
                         // add current minDist and dist to neighboring node
                         // to shorten future invocation of this var       
                         
-                        System.out.println("hashMap value is " + hashMap[nodeToBeUpdated] + " Selected node is " + selectedNode.nodeNum + " and weight is " + selectedNode.nodeWeight);                        
+                        //System.out.println("hashMap value is " + hashMap[nodeToBeUpdated] + " Selected node is " + selectedNode.nodeNum + " and weight is " + selectedNode.nodeWeight);                        
 
                         if (selectedNode.nodeWeight > updatedWeight)
                         {
                             selectedNode.nodeWeight = updatedWeight;      
                             bubbleUp(priorityQueue.indexOf(selectedNode));  
-                            System.out.println("*************" + priorityQueue.indexOf(selectedNode) + " " + selectedNode.nodeNum + " " + selectedNode.nodeWeight);      
-                            System.out.println();
-                        
+                            //System.out.println("*************" + priorityQueue.indexOf(selectedNode) + " " + selectedNode.nodeNum + " " + selectedNode.nodeWeight);                          
                         }       
                     }
                 }                
