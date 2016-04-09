@@ -52,19 +52,19 @@ class Dijkstra {
 
         while (priorityQueue.isEmpty() == false)
         {
-            if (priorityQueue.peek().neighbors.isEmpty())
-            {
-                Collections.swap(priorityQueue, 0, priorityQueue.size()-1);  
-                hashMap[priorityQueue.peek().nodeNum] = 0;  
-                hashMap[priorityQueue.getLast().nodeNum] = -1;
-                if (priorityQueue.getLast().nodeWeight < Integer.MAX_VALUE)
-                { 
-                    sum += priorityQueue.getLast().nodeWeight;
+            
+             System.out.println("\n\n\n");
+                for (int j=0; j<priorityQueue.size(); j++) {
+                    System.out.println(j + " " + priorityQueue.get(j).nodeNum + " " + priorityQueue.get(j).nodeWeight);
+                    //for (int k =0; k<priorityQueue.get(j).neighbors.size(); k++) {
+                        //System.out.println(j + " " + priorityQueue.get(j).neighbors.get(k).neighbor + " " + priorityQueue.get(j).neighbors.get(k).weight);
+                    //}
                 }
-                System.out.println("current sum is " + sum);
-                priorityQueue.removeLast();            
-                bubbleDown(0);
-            }
+                
+                
+            
+            // Step 5b. if highest priority node has distance value of positive infinity-like value
+            // then stop
             if (priorityQueue.peek().nodeWeight < Integer.MAX_VALUE)
             {
                 //System.out.println("current MAX weight is " + priorityQueue.peek().nodeWeight);
@@ -78,8 +78,9 @@ class Dijkstra {
                     // Step 5a. only continue if neighboring node is in the unvisited queue
                     // else, skip
                     //priorityQueue.size() >= hashMap[nodeToBeUpdated] 
-                    if (hashMap[nodeToBeUpdated] != -1 && nodeToBeUpdated < priorityQueue.size() )
-                    {
+                   
+                    if (hashMap[nodeToBeUpdated] != -1 && hashMap[nodeToBeUpdated] < priorityQueue.size() )
+                    {                        
                         Node selectedNode = priorityQueue.get(hashMap[nodeToBeUpdated]);
                         // var neighbor points to its position in LinkedList
                         // to shorten future invocation of this var
@@ -87,19 +88,20 @@ class Dijkstra {
                         int updatedWeight = currentWeight + priorityQueue.peek().neighbors.get(i).weight;
 
                         // add current minDist and dist to neighboring node
-                        // to shorten future invocation of this var               
+                        // to shorten future invocation of this var       
+                        
+                        System.out.println("hashMap value is " + hashMap[nodeToBeUpdated] + " Selected node is " + selectedNode.nodeNum + " and weight is " + selectedNode.nodeWeight);                        
 
                         if (selectedNode.nodeWeight > updatedWeight)
                         {
                             selectedNode.nodeWeight = updatedWeight;      
-                            bubbleUp(priorityQueue.indexOf(selectedNode));
-                            //System.out.println(priorityQueue.indexOf(selectedNode) + " " + selectedNode.nodeNum + " " + selectedNode.nodeWeight);      
+                            bubbleUp(priorityQueue.indexOf(selectedNode));  
+                            System.out.println("*************" + priorityQueue.indexOf(selectedNode) + " " + selectedNode.nodeNum + " " + selectedNode.nodeWeight);      
+                            System.out.println();
+                        
                         }       
-
                     }
-
                 }                
-
             } 
             
             // Step 4. after cost to all direct neighbors are calculated, dequeue current node
@@ -107,38 +109,25 @@ class Dijkstra {
                 Collections.swap(priorityQueue, 0, priorityQueue.size()-1);  
                 hashMap[priorityQueue.peek().nodeNum] = 0;  
                 hashMap[priorityQueue.getLast().nodeNum] = -1;
-                if (priorityQueue.getLast().nodeWeight < Integer.MAX_VALUE)
+                if (priorityQueue.getLast().nodeWeight < Integer.MAX_VALUE && priorityQueue.getLast().neighbors.isEmpty() == false)
                 { 
+                    //System.out.println("now adding " + priorityQueue.getLast().nodeNum + " " + priorityQueue.getLast().nodeWeight);
                     sum += priorityQueue.getLast().nodeWeight;
                 }
-                System.out.println("current sum is " + sum);
-                priorityQueue.removeLast();            
+                //System.out.println("current sum is " + sum);
+                priorityQueue.removeLast();
+               
                 bubbleDown(0);          
+                        
             
-            
-            
-
-            
-    //System.out.println("\n\n\n");
-    //for (int j=0; j<100; j++)
-    //System.out.println(j + " " + priorityQueue.get(j).nodeNum + " " + priorityQueue.get(j).nodeWeight);
-            
-            
-
-           
-            
-
-            
-            // Step 5b. if highest priority node has distance value of positive infinity-like value
-            // then stop
-
-    
-            // Step 6. select unvisited node with smallest tentative distance (minDist)
-            // class tree methods ensure we will always remove the end of the priority queue
-            // which means currPos = 0 until queue is empty
+               
+                System.out.println("--------------------------------------");
+                // Step 6. select unvisited node with smallest tentative distance (minDist)
+                // class tree methods ensure we will always remove the end of the priority queue
+                // which means currPos = 0 until queue is empty
                 
         }
-
+        
         return sum;   
         
     }
@@ -149,17 +138,18 @@ class Dijkstra {
     // and returns nothing
     private static void bubbleUp(int pos)
     {
-
-        // if parent has less priority (i.e. higher priority number)
-        // then swap, and call recursive upheap method
-        if (priorityQueue.get((pos-1)/2).nodeWeight > priorityQueue.get(pos).nodeWeight)
+        if ((pos-1)/2 > 0)
         {
-            int arrayLoc = priorityQueue.get((pos-1)/2).nodeNum;
-            Collections.swap(priorityQueue, pos, (pos-1)/2);
-            hashMap[nodeToBeUpdated] = (pos-1)/2;
-            hashMap[arrayLoc] = pos;
-            bubbleUp((pos-1)/2);
-
+            // if parent has less priority (i.e. higher priority number)
+            // then swap, and call recursive upheap method
+            if (priorityQueue.get((pos-1)/2).nodeWeight > priorityQueue.get(pos).nodeWeight)
+            {
+                int arrayLoc = priorityQueue.get((pos-1)/2).nodeNum;
+                Collections.swap(priorityQueue, pos, (pos-1)/2);
+                hashMap[nodeToBeUpdated] = (pos-1)/2;
+                hashMap[arrayLoc] = pos;
+                bubbleUp((pos-1)/2);
+            }
         }
     }
 
@@ -170,24 +160,30 @@ class Dijkstra {
     // and returns nothing
     private static void bubbleDown(int pos)
     {   
-        if (pos*2+2 < priorityQueue.size() ) {
+        if (pos*2+2 >= priorityQueue.size() && pos*2+1 < priorityQueue.size()) {
       
-        // 5 possible cases
-        // if node is greater than left child, and LC <= RC, node and LC are swapped
+            // 6 possible cases
+            // if node is greater than left child, and LC <= RC, node and LC are swapped
 
-        if (priorityQueue.get(pos).nodeWeight > priorityQueue.get(pos*2+1).nodeWeight)
-        {
-            if (priorityQueue.get(pos).nodeWeight < priorityQueue.get(pos*2+2).nodeWeight && pos*2+2 < priorityQueue.size() )
+            if (priorityQueue.get(pos).nodeWeight > priorityQueue.get(pos*2+1).nodeWeight)
             {
                 int arrayLoc = priorityQueue.get(pos*2+1).nodeNum;
                 Collections.swap(priorityQueue, pos, pos*2+1);
                 hashMap[nodeToBeUpdated] = pos*2+1;
                 hashMap[arrayLoc] = pos;
                 // calls helper class method downheap to reorganize priority queue
-                bubbleDown(pos*2+1);
-            } else if (priorityQueue.get(pos).nodeWeight > priorityQueue.get(pos*2+2).nodeWeight)
+                bubbleDown(pos*2+1);           
+            }
+        }
+        
+        
+        else if (pos*2+2 < priorityQueue.size() ) {
+      
+            // if node is greater than left child, and LC <= RC, node and LC are swapped
+
+            if (priorityQueue.get(pos).nodeWeight > priorityQueue.get(pos*2+1).nodeWeight)
             {
-                if (priorityQueue.get(pos*2+1).nodeWeight <= priorityQueue.get(pos*2+2).nodeWeight)
+                if (priorityQueue.get(pos).nodeWeight < priorityQueue.get(pos*2+2).nodeWeight )
                 {
                     int arrayLoc = priorityQueue.get(pos*2+1).nodeNum;
                     Collections.swap(priorityQueue, pos, pos*2+1);
@@ -195,27 +191,42 @@ class Dijkstra {
                     hashMap[arrayLoc] = pos;
                     // calls helper class method downheap to reorganize priority queue
                     bubbleDown(pos*2+1);
-                } else 
+                } else if (priorityQueue.get(pos).nodeWeight > priorityQueue.get(pos*2+2).nodeWeight)
                 {
-                    int arrayLoc = priorityQueue.get(pos*2+2).nodeNum;
-                    Collections.swap(priorityQueue, pos, pos*2+2);
-                    hashMap[nodeToBeUpdated] = pos*2+2;
-                    hashMap[arrayLoc] = pos;
-                    // calls helper class method downheap to reorganize priority queue
-                    bubbleDown(pos*2+2);
+                    if (priorityQueue.get(pos*2+1).nodeWeight <= priorityQueue.get(pos*2+2).nodeWeight)
+                    {
+                        int arrayLoc = priorityQueue.get(pos*2+1).nodeNum;
+                        Collections.swap(priorityQueue, pos, pos*2+1);
+                        hashMap[nodeToBeUpdated] = pos*2+1;
+                        hashMap[arrayLoc] = pos;
+                        // calls helper class method downheap to reorganize priority queue
+                        bubbleDown(pos*2+1);
+                    } else 
+                    {                   
+                        int arrayLoc = priorityQueue.get(pos*2+2).nodeNum;
+                        Collections.swap(priorityQueue, pos, pos*2+2);
+                        hashMap[nodeToBeUpdated] = pos*2+2;
+                        hashMap[arrayLoc] = pos;
+                        // calls helper class method downheap to reorganize priority queue
+                        bubbleDown(pos*2+2);
+                    } 
                 }
-            }
-        } else if (priorityQueue.get(pos).nodeWeight < priorityQueue.get(pos*2+1).nodeWeight && priorityQueue.get(pos).nodeWeight > priorityQueue.get(pos*2+2).nodeWeight && pos*2+2 < priorityQueue.size())
-        {            
-            int arrayLoc = priorityQueue.get(pos*2+2).nodeNum;
-            Collections.swap(priorityQueue, pos, pos*2+2);
-            hashMap[nodeToBeUpdated] = pos*2+2;
-            hashMap[arrayLoc] = pos;
-            // calls helper class method downheap to reorganize priority queue
-            bubbleDown(pos*2+2);          
-        } else {      }
-        
-        } }
+            } else if (priorityQueue.get(pos).nodeWeight < priorityQueue.get(pos*2+1).nodeWeight && priorityQueue.get(pos).nodeWeight > priorityQueue.get(pos*2+2).nodeWeight)
+            {         
+                int arrayLoc = priorityQueue.get(pos*2+2).nodeNum;
+                Collections.swap(priorityQueue, pos, pos*2+2);
+                hashMap[nodeToBeUpdated] = pos*2+2;
+                hashMap[arrayLoc] = pos;
+                // calls helper class method downheap to reorganize priority queue
+                bubbleDown(pos*2+2);    
+
+            } else {      }
+
+            // do nothing
+
+        } else {    }
+
+         }
  
     
     
